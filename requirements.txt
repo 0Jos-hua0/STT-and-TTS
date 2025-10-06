@@ -1,0 +1,8 @@
+openai-whisper
+numpy
+pydantic
+piper-tts
+sounddevice
+scipy
+PyQt5
+flask
