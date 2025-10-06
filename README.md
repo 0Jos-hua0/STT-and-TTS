@@ -1,56 +1,184 @@
-# 🗣️ Local Voice Echo (Verbal Mirror)
+# 🗣️ Verbal Mirror - STT & TTS Application
 
-This is a simple, fully offline project that converts speech-to-text (STT) and then immediately echoes the transcribed text using text-to-speech (TTS). It uses only open-source, locally installed models.
+A sophisticated, fully offline speech-to-text (STT) and text-to-speech (TTS) application with both web and desktop interfaces. Uses open-source AI models for completely local processing.
 
-## ⚠️ Prerequisites
+## ✨ Features
 
-You MUST install the following external system tool and download the AI models before running the Python script.
+- **🎤 Real-time Speech Recognition** - Converts speech to text using Whisper AI
+- **🔊 High-quality Text-to-Speech** - Uses Piper TTS with Amy's voice
+- **🌐 Web Interface** - Modern web app with real-time status updates
+- **🖥️ Desktop GUI** - PyQt5 interface for desktop use
+- **⚡ Modular Architecture** - Separate modules for audio, STT, and TTS
+- **🔄 Real-time Feedback** - Live status updates during recording and processing
+- **💾 Persistent Transcriptions** - Previous transcriptions remain visible
 
-### 1. External System Dependency (FFmpeg)
+## ⚠️ Important Warnings & Prerequisites
 
-FFmpeg is required by the Whisper library to handle audio input correctly.
+### 🚨 DLL Initialization Issues
+**You may encounter DLL initialization failures** when running this application, especially on Windows. This is a common issue with the underlying audio libraries.
 
-* **Windows/macOS/Linux:** Install FFmpeg and ensure it is available in your system's PATH.
+**Solutions:**
+1. Install [Microsoft Visual C++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+2. If issues persist, run the application multiple times - it often resolves after the first few attempts
+3. Check that all dependencies are properly installed in your virtual environment
 
-### 2. Python Environment Setup
+### 📋 Prerequisites
 
-1.  Create and activate a virtual environment:
-    ```bash
-    python -m venv venv
-    .\venv\Scripts\activate  # On Windows
-    ```
-2.  Install the required Python libraries:
-    ```bash
-    pip install -r requirements.txt
-    ```
+#### 1. External System Dependencies
+- **FFmpeg** - Required by Whisper for audio processing
+  - **Windows/macOS/Linux:** Install FFmpeg and ensure it's in your system PATH
+- **Microsoft Visual C++ Redistributable** - For Windows audio support
 
-### 3. Download AI Models (STT and TTS)
+#### 2. Python Environment Setup
+```bash
+# Create virtual environment
+python -m venv venv
+.\venv\Scripts\activate  # Windows
+# source venv/bin/activate  # macOS/Linux
 
-The project requires a Whisper model and a Piper voice model to run locally.
+# Install dependencies
+pip install -r requirements.txt
+```
 
-1.  **Whisper Model (STT):**
-    * The script uses the **'tiny'** model by default for fast performance on CPU. Whisper will download this model automatically the first time you run the script.
+#### 3. AI Models (Auto-downloaded)
+- **Whisper Model (STT)** - Uses 'small' model (downloads automatically ~40MB)
+- **Piper Model (TTS)** - Uses 'en_US-amy-medium' voice (downloads automatically ~60MB)
 
-2.  **Piper Model (TTS):**
-    * **Download the Piper Voice:** Go to the [Piper TTS GitHub repository](https://github.com/rhasspy/piper) to find voice models.
-    * Download both the **ONNX file** (e.g., `en_US-lessac-medium.onnx`) and its corresponding **JSON configuration file** (e.g., `en_US-lessac-medium.json`).
-    * Place **BOTH** of these files directly into your project's main directory.
-    * **Important:** If you choose a different voice, update the file paths in `voice_repeater.py`.
+## 🚀 How to Run
 
-## 🚀 How to Run the Project
+### Option 1: Web Interface (Recommended)
+```bash
+python web_app.py
+```
+- Open `http://localhost:5000` in your browser
+- Click "Start Recording" to begin speech recognition
+- View transcriptions in real-time
+- Use "Speak" button for text-to-speech
 
-1.  Ensure all prerequisites and models are set up and in the project folder.
-2.  Run the main script:
-    ```bash
-    python voice_repeater.py
-    ```
+### Option 2: Desktop GUI
+```bash
+python voice_gui.py
+```
+- PyQt5 interface for desktop use
+- Same functionality as web app in a native window
 
-The application will start listening. Say something, and after a moment of silence, the program will transcribe your speech and immediately speak the text back to you.
+## 📖 User Manual
 
-To stop the program, simply say the word **"quit"** or press **Ctrl+C**.
+### Web Interface Usage
+1. **Start Recording:**
+   - Click "🎤 Start Recording"
+   - Speak clearly into your microphone
+   - Status updates show recording progress
+   - Click "⏹️ Stop Recording" when finished
 
-## Troubleshooting
+2. **View Transcriptions:**
+   - Transcriptions appear in the text area during/after recording
+   - Previous transcriptions are preserved between recordings
 
-- If you get an error about missing DLLs, you may need to install the [Microsoft Visual C++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe).
-- If you encounter issues with audio devices, check your system's audio settings and ensure the correct input/output devices are selected.
-- For better performance, consider using a more powerful Whisper model (e.g., 'base' or 'small') if your system can handle it.
+3. **Text-to-Speech:**
+   - Type text in the input field
+   - Click "Speak" to hear it spoken
+   - Uses Amy's natural voice
+
+### Desktop GUI Usage
+- Same functionality as web interface
+- Native desktop window
+- May have better audio device handling
+
+### Status Messages
+- **"Recording..."** - Currently recording audio
+- **"Recording: X.Xs elapsed"** - Shows recording duration
+- **"Recording: Speech detected"** - Audio input detected
+- **"Transcribing audio..."** - Processing speech to text
+- **"Ready"** - Waiting for input
+
+## 🏗️ Architecture
+
+### Modular Design
+- **`audio.py`** - Audio recording and processing
+- **`stt.py`** - Speech-to-text using Whisper
+- **`tts.py`** - Text-to-speech using Piper
+- **`web_app.py`** - Flask web application
+- **`voice_gui.py`** - PyQt5 desktop interface
+
+### Key Features
+- **Real-time Status Updates** - Live feedback during all operations
+- **Persistent Sessions** - Previous transcriptions remain visible
+- **STT-Only Mode** - No automatic TTS after transcription
+- **Error Handling** - Graceful handling of audio/processing errors
+
+## 🔧 Recent Updates
+
+### Version 2.0 - Major Improvements
+- ✅ **Modular Architecture** - Split into separate audio, STT, and TTS modules
+- ✅ **Real-time Status Updates** - Live feedback during recording and processing
+- ✅ **Persistent Transcriptions** - Previous results don't disappear
+- ✅ **STT-Only Mode** - Removed automatic TTS after transcription
+- ✅ **Enhanced Web Interface** - Better real-time updates and status display
+- ✅ **Improved Error Handling** - Better DLL initialization and audio error handling
+
+### Previous Versions
+- **Version 1.0** - Basic voice repeater functionality
+
+## 🛠️ Troubleshooting
+
+### Common Issues
+
+#### DLL Initialization Failures
+```
+Error: DLL load failed
+```
+**Solutions:**
+1. Install [Microsoft Visual C++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+2. Try running the application multiple times
+3. Ensure you're using the virtual environment
+
+#### Audio Device Issues
+```
+Error: Audio device not found
+```
+**Solutions:**
+1. Check microphone permissions
+2. Verify audio drivers are installed
+3. Try different audio devices in system settings
+
+#### Model Download Issues
+```
+Error: Model download failed
+```
+**Solutions:**
+1. Check internet connection
+2. Models download automatically on first run
+3. Ensure sufficient disk space (~100MB for models)
+
+#### Transcription Not Displaying
+```
+Backend shows transcription but web interface doesn't update
+```
+**Solutions:**
+1. Check browser console for JavaScript errors
+2. Ensure `/api/status` endpoint is accessible
+3. Verify real-time polling is working
+
+### Performance Tips
+- Use the 'small' Whisper model for better performance
+- Close other applications that use audio/microphone
+- Ensure sufficient RAM (at least 4GB recommended)
+
+## 📝 Requirements
+
+See `requirements.txt` for complete dependency list:
+- `openai-whisper` - Speech recognition
+- `piper-tts` - Text-to-speech
+- `sounddevice` - Audio input/output
+- `numpy` - Audio processing
+- `flask` - Web framework
+- `pyqt5` - Desktop GUI
+
+## 🤝 Contributing
+
+This is an open-source project. Feel free to contribute improvements, bug fixes, or new features!
+
+## 📄 License
+
+This project is open-source and available for personal and educational use.
